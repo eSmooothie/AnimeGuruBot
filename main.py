@@ -66,11 +66,13 @@ def display_bot_commands():
 ```;suggest - get suggestion```
     """
 
-def add_anime(data): # add anime in db
+# add anime in db
+def add_anime(data): 
   key = hash(data)
   db[key] = {"title":data.title,"genre": [],"detail":"None"}
 
-def show_anime_list(page): # show list of anime
+# show list of anime
+def show_anime_list(page): 
   matches = db.keys()
   matches = list(matches)
   # 10 anime per page
@@ -90,6 +92,7 @@ def show_anime_list(page): # show list of anime
   anime_list = anime_list + "```"
   return anime_list
 
+# choice an anime in the list then return it
 def suggest_anime():
   matches = db.keys()
   matches = list(matches)
@@ -98,6 +101,7 @@ def suggest_anime():
 
   return "My suggestion is `{}`. :smiling_face_with_3_hearts:".format(anime["title"])
 
+# delete all keys
 def delete_all_keys():
   for keys in db.keys():
     del db[keys]
