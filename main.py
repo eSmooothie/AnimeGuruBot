@@ -65,7 +65,8 @@ async def on_message(message):
       anime_title = ' '.join(anime_title)
       new_anime = Anime(anime_title, None, None)
       add_anime(new_anime)
-      await message.channel.send("{} added in database.".format(anime_title)) # display message in discord
+
+      await message.channel.send("{} added in database.".format(anime_title)) 
 
 
     if message.content.startswith(';list'):
@@ -95,8 +96,11 @@ Commands List
 
 # add anime in db
 def add_anime(data): 
-  key = hash(data)
+  key = hash(data.title.lower())
+
   db[key] = {"title":data.title,"genre": [],"detail":"None"}
+
+
 
 # show list of anime
 def show_anime_list(page): 
