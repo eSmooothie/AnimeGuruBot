@@ -32,19 +32,31 @@ async def on_ready():
 @client.event 
 # when bot recieve message, the on_message() event is called.
 async def on_message(message):
+    anime_channel = client.get_channel(CHANNEL_ID)
+
     if message.author == client.user:
       return
 
-    # if message.channel.id != CHANNEL_ID:
-    #   anime_channel = client.get_channel(CHANNEL_ID)
-    #   msg = "Sorry Im not allowed to talk here. Go to {}.".format(anime_channel.mention)
-    #   obj = await message.channel.send(msg)
-    #   message_obj.append(obj)
-    #   return
+    if message.content.startswith(';clean'):
+      amount = 20
+      await message.channel.send("Cleaning...")
+      await asyncio.sleep(2)
+      await message.channel.purge(limit=amount)
 
-    if message.content.startswith(';cmd'):
+    if message.content.startswith(';cmd') and message.channel.id == CHANNEL_ID:
       await message.channel.send(display_bot_commands()) # display all bot command
+    else:
+      # if another channel
+      msg = "I can only perform `;clean` command. :sad: Go to {}".format(anime_channel.mention)
+      await message.channel.send(msg)
 
+    if message.channel.id != CHANNEL_ID:
+      msg = "Sorry Im not allowed to talk here. Go to {}.".format(anime_channel.mention)
+      obj = await message.channel.send(msg)
+      message_obj.append(obj)
+      return
+
+    
     if message.content.startswith(';add'):
       user_msg = message.content.split(' ')
       anime_title = user_msg[1:]
@@ -67,11 +79,7 @@ async def on_message(message):
     if message.content.startswith(';suggest'):
       await message.channel.send(suggest_anime())
 
-    if message.content.startswith(';clean'):
-      amount = 20
-      await message.channel.send("Cleaning...")
-      await asyncio.sleep(2)
-      await message.channel.purge(limit=amount)
+
 
 def display_bot_commands():
     return """
