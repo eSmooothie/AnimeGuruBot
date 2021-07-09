@@ -47,11 +47,12 @@ async def on_message(message):
       await message.channel.send(display_bot_commands()) # display all bot command
     else:
       # if another channel
-      msg = "I can only perform `;clean` command. :sad: Go to {}".format(anime_channel.mention)
+      msg = "I can only perform `;clean` command. :sad: Go to {}, to see my full potential.".format(anime_channel.mention)
       await message.channel.send(msg)
+      return
 
     if message.channel.id != CHANNEL_ID:
-      msg = "Sorry Im not allowed to talk here. Go to {}.".format(anime_channel.mention)
+      msg = "Sorry Im not allowed to showcase my capabilities here. Go to {}.".format(anime_channel.mention)
       obj = await message.channel.send(msg)
       message_obj.append(obj)
       return
