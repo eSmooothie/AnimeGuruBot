@@ -42,12 +42,13 @@ async def on_message(message):
       await message.channel.send("Cleaning...")
       await asyncio.sleep(2)
       await message.channel.purge(limit=amount)
+      return
 
     if message.content.startswith(';cmd') and message.channel.id == CHANNEL_ID:
       await message.channel.send(display_bot_commands()) # display all bot command
-    else:
+    elif message.content.startswith(';cmd'):
       # if another channel
-      msg = "I can only perform `;clean` command. :sad: Go to {}, to see my full potential.".format(anime_channel.mention)
+      msg = "I can only perform `;clean` command. :pensive: Go to {}, to see my full potential.".format(anime_channel.mention)
       await message.channel.send(msg)
       return
 
