@@ -2,6 +2,8 @@
 import discord
 import os
 import random
+import requests
+import json
 import asyncio
 from keep_alive import keep_alive
 from replit import db
@@ -37,18 +39,25 @@ async def on_message(message):
     if message.author == client.user:
       return
 
-    if message.content.startswith(';clean'):
+    msg = message.content
+
+    if msg.startswith(';inspire'):
+      qoute = get_quote()
+      await message.channel.send(qoute)
+      return
+
+    if msg.startswith(';clean'):
       amount = 20
       await message.channel.send("Cleaning...")
       await asyncio.sleep(2)
       await message.channel.purge(limit=amount)
       return
 
-    if message.content.startswith(';cmd') and message.channel.id == CHANNEL_ID:
+    if msg.startswith(';cmd') and message.channel.id == CHANNEL_ID:
       await message.channel.send(display_bot_commands()) # display all bot command
-    elif message.content.startswith(';cmd'):
+    elif msg.startswith(';cmd'):
       # if another channel
-      msg = "I can only perform `;clean` command. :pensive: Go to {}, to see my full potential.".format(anime_channel.mention)
+      msg = "I can only perform `;clean` and `;inspire` command. :pensive: Go to {}, to see my full potential.".format(anime_channel.mention)
       await message.channel.send(msg)
       return
 
@@ -59,8 +68,8 @@ async def on_message(message):
       return
 
     
-    if message.content.startswith(';add'):
-      user_msg = message.content.split(' ')
+    if msg.startswith(';add'):
+      user_msg = msg.split(' ')
       anime_title = user_msg[1:]
       anime_title = ' '.join(anime_title)
       new_anime = Anime(anime_title, None, None)
@@ -69,8 +78,8 @@ async def on_message(message):
       await message.channel.send("{} added in database.".format(anime_title)) 
 
 
-    if message.content.startswith(';list'):
-      user_msg = message.content.split(' ')
+    if msg.startswith(';list'):
+      user_msg = msg.split(' ')
       if len(user_msg) < 2:
         page = 1
       else:
@@ -79,7 +88,7 @@ async def on_message(message):
       await message.channel.send(show_anime_list(page))
 
 
-    if message.content.startswith(';suggest'):
+    if msg.startswith(';suggest'):
       await message.channel.send(suggest_anime())
 
 
@@ -92,6 +101,7 @@ Commands List
 `;list <page no.> - display 10 anime in the list`\n
 `;suggest - get suggestion`\n
 `;clean - clean channel messages`
+`;inspire - get random inspiring qoutes`
     """
 
 # add anime in db
@@ -131,6 +141,12 @@ def suggest_anime():
   anime = db[key]
 
   return "My suggestion is `{}`. :smiling_face_with_3_hearts:".format(anime["title"])
+
+def get_quote():
+  response = requests.get("https://zenquotes.io/api/random")
+  json_data = json.loads(response.text)
+  quote = json_data[0]["q"] + " -" + json_data[0]["a"]
+  return(quote)
 
 # delete all keys
 def delete_all_keys():
