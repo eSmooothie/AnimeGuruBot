@@ -44,8 +44,9 @@ async def on_message(message):
     msg = message.content
 
     if msg.startswith(';inspire'):
+      print(message.author)
       quote = get_quote()
-      await message.channel.send(quote)
+      await message.channel.send("{0.mention}, I hope you will be inspired by this quote.```{1}```".format(message.author,quote))
       return
 
     if msg.startswith(';clean'):
@@ -246,7 +247,7 @@ def suggest_anime():
 def get_quote():
   response = requests.get("https://zenquotes.io/api/random")
   json_data = json.loads(response.text)
-  quote = json_data[0]["q"] + " -" + json_data[0]["a"]
+  quote = "" + json_data[0]["q"] + "\n- " + json_data[0]["a"]
   return(quote)
 
 # delete all keys
